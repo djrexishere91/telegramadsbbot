@@ -1,0 +1,9 @@
+[Unit]
+Description=ADSB Telegram Bot
+After=readsb.service
+
+[Service]
+Type=oneshot
+User=adsb
+EnvironmentFile=/opt/adsb-telegram/config.example
+ExecStart=/usr/bin/python3 /opt/adsb-telegram/adsb-telegram.py
