@@ -1,126 +1,97 @@
-ADS-B Telegram Alert Bot 🚁
-🇮🇹 Italiano
-Bot Telegram per notifiche ADS-B da readsb/tar1090.
+ADS-B Telegram Bot 🚁
+🇮🇹 Che fa?
+Invia notifiche Telegram con foto quando vede aerei speciali (militari, governativi, VIP) dalla tua stazione ADS-B.
 
-Monitora aircraft.json → Foto + alert per aerei dalle tue liste CSV GitHub (mil/gov/VIP).
+Legge aircraft.json da readsb → Controlla le tue liste → Invia foto + info su Telegram.
 
-🚀 Setup 3 Minuti
+🇺🇸 What does it do?
+Sends Telegram notifications with photos when it spots special aircraft (military, government, VIP) from your ADS-B station.
+
+Reads aircraft.json from readsb → Checks your lists → Sends photo + info to Telegram.
+
+🚀 Come installarlo / How to install
+Passo 1: Scarica
 bash
 git clone https://github.com/djrexishere91/adsb-telegram-bot
 cd adsb-telegram-bot
+Passo 2: Telegram Bot
+Vai su @BotFather
 
-# 1. Telegram
-cp env.example .env
-nano .env  # TG_TOKEN=@BotFather
-          # TG_CHAT_IDS=@userinfobot
+/newbot → Nome bot → Copia TG_TOKEN
 
-# 2. Personalizza
-nano adsb-telegram.py
-# BOT_TITLE="🚁 TuoStazione"
-# REMOTE_LISTS=[("mil","https://raw...")]
+Trova chat ID con @userinfobot
 
-# 3. Test
-python3 adsb-telegram.py
-📁 Configurazione
-.env (solo Telegram!)
-
+Passo 3: Configura
+bash
+cp config.example .env
+nano .env
 text
-TG_TOKEN="1234567890:ABC..."
-TG_CHAT_IDS="-100xxxxxxxxxx"
-adsb-telegram.py
-
+TG_TOKEN="tuo_token_qua"
+TG_CHAT_IDS="-1001234567890"
+Passo 4: Le tue liste
+bash
+nano adsb-telegram.py
 python
-BOT_TITLE = "🚁 ADSB Alert"
+# Cambia con i TUOI CSV su GitHub
 REMOTE_LISTS = [
-    ("mil", "https://raw.githubusercontent.com/user/repo/main/mil.csv"),
+    ("militari", "https://raw.githubusercontent.com/tuo-user/liste-adsb/main/militari.csv"),
 ]
-✨ Funzionalità
-Foto auto (4 URL random)
-
-Cooldow 15min
-
-Distanza haversine
-
-HTML ricco m/ft km/h
-
-SQLite tracking
-
-Multi-chat
-
-📊 Esempio
+Passo 5: Testa
+bash
+python3 adsb-telegram.py
+text
+[21:36] sent=2 db=156 live=23  ✅ OK!
+📱 Cosa ricevi su Telegram
 text
 🚁 ADSB Alert
-MM62201 • 39C4AF • F35
-F-35A | Vel: 780km/h | Dist: 45km
-#adsb
-🛠 Systemd
+Matricola: MM62201  ICAO: 39C4AF  Tipo: F35
+F-35 Lightning II - Aeronautica Militare
+
+📍 Dist: 45km   ⚡ Vel: 780km/h   ⬆️ Alt: 8500m
+👁️ Oggi: 2h45m   📡 ADS-B
+
+Tar1090 #adsb
+[Foto aereo]
+📝 Crea le tue liste CSV (su GitHub)
+File: militari.csv
+
+text
+hex,matricola,tipo,icao,foto1,foto2
+39C4AF,MM62201,F-35,F35,https://i.imgur.com/f35-1.jpg,https://i.imgur.com/f35-2.jpg
+3C6445,I-TIMU,Gulfstream G650,G650,https://i.imgur.com/g650.jpg,
+Salva come RAW → Copia URL → Inserisci in REMOTE_LISTS.
+
+⚙️ Opzionale: Avvio automatico
 bash
-sudo systemctl enable --now adsb-telegram.timer  # 30s
-🇺🇸 English
-Real-time ADS-B Telegram alerts from readsb/tar1090.
+# Copia service
+sudo cp adsb-telegram.* /etc/systemd/system/
 
-Monitors aircraft.json → Photos + alerts for aircraft from your GitHub CSV lists (mil/gov/VIP).
+# Avvia ogni 30 secondi
+sudo systemctl enable --now adsb-telegram.timer
+❓ Problemi comuni
+Problema	Soluzione
+"No aircraft"	Aggiungi CSV in REMOTE_LISTS
+"Telegram error"	Controlla .env token
+Nessuna distanza	Aggiungi STATION_LAT=44.8 STATION_LON=11.6
+Non parte	ls /run/readsb/aircraft.json
+Semplice. Funziona. ADS-B + Telegram = ❤️
 
-🚀 3 Minute Setup
-bash
-git clone https://github.com/djrexishere91/adsb-telegram-bot
-cd adsb-telegram-bot
-
-# 1. Telegram
-cp env.example .env
-nano .env  # TG_TOKEN=@BotFather
-          # TG_CHAT_IDS=@userinfobot
-
-# 2. Customize
-nano adsb-telegram.py
-# BOT_TITLE="🚁 YourStation"
-# REMOTE_LISTS=[("mil","https://raw...")]
-
-# 3. Test
-python3 adsb-telegram.py
-📁 Configuration
-.env (Telegram only!)
+MIT License
 
 text
-TG_TOKEN="1234567890:ABC..."
-TG_CHAT_IDS="-100xxxxxxxxxx"
-adsb-telegram.py
 
-python
-BOT_TITLE = "🚁 ADSB Alert"
-REMOTE_LISTS = [
-    ("mil", "https://raw.githubusercontent.com/user/repo/main/mil.csv"),
-]
-✨ Features
-Auto photos (4 random URLs)
+---
 
-15min cooldown
+## 🎯 **File per GitHub**:
 
-Haversine distance
+adsb-telegram.py ✅
+README.md ✅ (copia sopra)
+config.example ✅
+adsb-telegram.service ✅
+adsb-telegram.timer ✅
+LICENSE ✅
 
-Rich HTML m/ft km/h
-
-SQLite tracking
-
-Multi-chat
-
-📊 Example
 text
-🚁 ADSB Alert
-MM62201 • 39C4AF • F35
-F-35A | Speed: 780km/h | Dist: 45km
-#adsb
-🛠 Systemd
-bash
-sudo systemctl enable --now adsb-telegram.timer  # 30s
-📋 CSV Format
-text
-hex,reg,type,icao,img1,img2
-39C4AF,MM62201,F-35A,F35,https://foto1.jpg,https://foto2.jpg
-🔧 Troubleshooting
-text
-No aircraft → Fill REMOTE_LISTS
-Telegram error → Check .env
-No distance → STATION_LAT/LON env
-Log: [21:36] sent=2 db=156 live=23
-MIT License | Powered by ADS-B 🛫
+
+## **Description GitHub**:
+Bot Telegram notifiche ADS-B con foto da readsb. Liste CSV GitHub, cooldown 15min, distanza, HTML ricco.
